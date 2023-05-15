@@ -14,17 +14,22 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [notificationMessage, setNotificationMessage] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
 
+  const [createBlogVisible, setCreateBlogVisible] = useState(false)
+  const hideWhenVisible = { display: createBlogVisible ? "none" : "" }
+  const showWhenVisible = { display: createBlogVisible ? "" : "none" }
+
+
+  const fetchBlogs = async () => {
+    const response = await blogService.getAll()
+    setBlogs(response)
+  }
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      const response = await blogService.getAll()
-      setBlogs(response)
-    }
+    fetchBlogs()
+  }, [])
 
+  useEffect(() => {
     const checkLoggedInUser = async () => {
       const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
       if (loggedUserJSON) {
@@ -37,7 +42,7 @@ const App = () => {
         }, 5000)
       }
     }
-    fetchBlogs()
+
     checkLoggedInUser()
   }, [])
 
@@ -80,11 +85,10 @@ const App = () => {
     }
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-
+  const createBlog = async (title, author, url) => {
     try {
       const response = await blogService.createBlog({ title, author, url })
+      fetchBlogs()
       setNotificationMessage(`Added blog ${title} by ${author}`)
       setTimeout(() => {
         setNotificationMessage(null)
@@ -124,16 +128,14 @@ const App = () => {
       <Error message={errorMessage} />
       <h2>{user.username} is logged in</h2>
       <button onClick={handleLogOut}>Log out</button>
-      <div>
+      <div style={hideWhenVisible}>
+        <button onClick={() => setCreateBlogVisible(true)}>Create Blog</button>
+      </div>
+      <div style={showWhenVisible}>
         <CreateBlogForm
-          onSubmit={handleCreateBlog}
-          title={title}
-          author={author}
-          url={url}
-          setAuthor={setAuthor}
-          setTitle={setTitle}
-          setUrl={setUrl}
+          createBlog={createBlog}
         />
+        <button onClick={() => setCreateBlogVisible(false)}>Cancel</button>
       </div>
       <div>
         <h2>blogs</h2>

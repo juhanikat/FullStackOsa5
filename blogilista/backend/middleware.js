@@ -18,7 +18,6 @@ const userExtractor = async (request, response, next) => {
 	try {
 		decodedToken = jwt.verify(request.body.token, process.env.SECRET) 
 	} catch(error) {
-		console.log(error)
 		decodedToken = null
 	}
 
