@@ -16,9 +16,12 @@ const App = () => {
 
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    const fetchBlogs = async () => {
+      const response = await blogService.getAll()
+      setBlogs(response)
+    }
+
+    fetchBlogs()
   }, [])
 
 
@@ -53,12 +56,6 @@ const App = () => {
             setPassword={setPassword}
           />
         </div>
-        <div>
-          <h2>blogs</h2>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
-          )}
-        </div>
       </div>
     )
   }
@@ -67,6 +64,7 @@ const App = () => {
     <div>
       <Notification message={notificationMessage} />
       <Error message={errorMessage} />
+      <h2>{user.username} is logged in</h2>
       <div>
         <h2>blogs</h2>
         {blogs.map(blog =>
