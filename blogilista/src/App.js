@@ -87,7 +87,7 @@ const App = () => {
 
   const createBlog = async (title, author, url) => {
     try {
-      const response = await blogService.createBlog({ title, author, url })
+      await blogService.createBlog({ title, author, url })
       fetchBlogs()
       setNotificationMessage(`Added blog ${title} by ${author}`)
       setTimeout(() => {
@@ -100,6 +100,24 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
 
+    }
+  }
+
+  const likeBlog = async (blog) => {
+    blog.likes += 1
+    try {
+      await blogService.updateBlog(blog)
+      fetchBlogs()
+      setNotificationMessage(`Liked blog ${blog.title} by ${blog.author}`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    } catch (exception) {
+      console.log(exception)
+      setErrorMessage(exception.response.data.error)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
   }
 
@@ -121,7 +139,9 @@ const App = () => {
       </div>
     )
   }
-
+  const blogsList = blogs.map(blog =>
+    <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
+  ).sort((a, b) => b.props.blog.likes - a.props.blog.likes)
   return (
     <div>
       <Notification message={notificationMessage} />
@@ -139,9 +159,7 @@ const App = () => {
       </div>
       <div>
         <h2>blogs</h2>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        {blogsList}
       </div>
     </div>
   )
