@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from "./services/login"
+import loginService from './services/login'
 import Notification from './components/Notification'
 import Error from './components/Error'
 import LoginForm from './components/Login'
@@ -10,14 +10,14 @@ import CreateBlogForm from './components/CreateBlog'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [notificationMessage, setNotificationMessage] = useState("")
-  const [errorMessage, setErrorMessage] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const [createBlogVisible, setCreateBlogVisible] = useState(false)
-  const hideWhenVisible = { display: createBlogVisible ? "none" : "" }
-  const showWhenVisible = { display: createBlogVisible ? "" : "none" }
+  const hideWhenVisible = { display: createBlogVisible ? 'none' : '' }
+  const showWhenVisible = { display: createBlogVisible ? '' : 'none' }
 
 
   const fetchBlogs = async () => {
@@ -72,12 +72,12 @@ const App = () => {
   const handleLogOut = async (event) => {
     event.preventDefault()
     if (user) {
-      if (window.localStorage.getItem("loggedBlogappUser")) {
-        window.localStorage.removeItem("loggedBlogappUser")
-        console.log("removed user from local storage")
+      if (window.localStorage.getItem('loggedBlogappUser')) {
+        window.localStorage.removeItem('loggedBlogappUser')
+        console.log('removed user from local storage')
         setUser(null)
         blogService.setToken(null)
-        setNotificationMessage("logged out succesfully")
+        setNotificationMessage('logged out succesfully')
         setTimeout(() => {
           setNotificationMessage(null)
         }, 5000)
@@ -121,6 +121,23 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (blog) => {
+    try {
+      await blogService.removeBlog(blog)
+      fetchBlogs()
+      setNotificationMessage(`Removed blog ${blog.title} by ${blog.author}`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    } catch (exception) {
+      console.log(exception)
+      setErrorMessage(exception.response.data.error)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -140,7 +157,7 @@ const App = () => {
     )
   }
   const blogsList = blogs.map(blog =>
-    <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
+    <Blog key={blog.id} blog={blog} likeBlog={likeBlog} removeBlog={removeBlog} currentUser={user} />
   ).sort((a, b) => b.props.blog.likes - a.props.blog.likes)
   return (
     <div>
