@@ -12,18 +12,21 @@ const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
   }
 
   const [expanded, setExpanded] = useState(false)
-  const displayRemove = blog.user.username === currentUser.username ? true : false
+  let displayRemove = false
+  if (currentUser && blog.user.username === currentUser.username) {
+    displayRemove = true
+  }
 
   if (expanded) {
     return (
-      <div style={blogStyle}>
-        {blog.title} <button onClick={() => setExpanded(false)}>Hide</button>
+      <div style={blogStyle} className='expandedBlog'>
+        {blog.title} {blog.author} <button onClick={() => setExpanded(false)}>Hide</button>
         <br></br>
         {blog.url}
         <br></br>
         Likes: {blog.likes} <button onClick={() => likeBlog(blog)}>Like</button>
         <br></br>
-        Author: {blog.author}
+        User: {blog.user.username}
         <br></br>
         {displayRemove && <button onClick={() => removeBlog(blog)}>Remove</button>}
       </div>
@@ -31,7 +34,7 @@ const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
   }
 
   return (
-    <div>
+    <div className='blog'>
       {blog.title} {blog.author} <button onClick={() => setExpanded(true)}>View</button>
     </div>
   )
@@ -41,7 +44,6 @@ Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   likeBlog: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
-  currentUser: PropTypes.object.isRequired
 }
 
 export default Blog
