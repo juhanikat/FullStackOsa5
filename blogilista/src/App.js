@@ -174,7 +174,7 @@ const App = () => {
         />
         <button onClick={() => setCreateBlogVisible(false)}>Cancel</button>
       </div>
-      <div>
+      <div className='blogsDiv'>
         <h2>blogs</h2>
         {blogsList}
       </div>

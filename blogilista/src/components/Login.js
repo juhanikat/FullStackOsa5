@@ -2,7 +2,8 @@ const LoginForm = (props) => {
   return (
     <form onSubmit={props.onSubmit}>
       <div>
-                name: <input
+        name: <input
+          id="username"
           type="text"
           name="Username"
           value={props.username}
@@ -10,7 +11,8 @@ const LoginForm = (props) => {
         />
       </div>
       <div>
-                password: <input
+        password: <input
+          id="password"
           type="text"
           name="Password"
           value={props.password}
