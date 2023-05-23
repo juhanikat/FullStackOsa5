@@ -26,7 +26,7 @@ describe('Blog tests', () => {
 
   test('by default, blog renders title and author but not url or likes', async () => {
     const { container } = render(<Blog blog={blog} likeBlog={jest.fn()} removeBlog={jest.fn()} currentUser={null} />)
-    const div = container.querySelector('.blog')
+    const div = container.querySelector('.defaultBlog')
     expect(div).toHaveTextContent('test title')
     expect(div).toHaveTextContent('test author')
     let element = screen.queryByText('www.testurl.fi', { exact: 'false' })

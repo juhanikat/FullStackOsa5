@@ -19,7 +19,7 @@ const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
 
   if (expanded) {
     return (
-      <div style={blogStyle} className='expandedBlog'>
+      <div style={blogStyle} className='expandedBlog blog'>
         {blog.title} {blog.author} <button onClick={() => setExpanded(false)}>Hide</button>
         <br></br>
         {blog.url}
@@ -34,7 +34,7 @@ const Blog = ({ blog, likeBlog, removeBlog, currentUser }) => {
   }
 
   return (
-    <div className='blog'>
+    <div className='defaultBlog blog'>
       {blog.title} {blog.author} <button onClick={() => setExpanded(true)}>View</button>
     </div>
   )

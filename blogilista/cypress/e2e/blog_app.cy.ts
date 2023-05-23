@@ -52,6 +52,48 @@ describe('Blog app', function() {
       cy.get('.blogsDiv').contains("cypress is")
     })
 
+    it('blogs are ordered by amount of likes', function() {
+      cy.contains('Create Blog').click()
+      cy.get("#title").type('cypress')
+      cy.get("#author").type('is')
+      cy.get("#url").type('fun')
+      cy.contains("add").click()
+
+      cy.get("#title").type('cypress2')
+      cy.get("#author").type('is2')
+      cy.get("#url").type('fun2')
+      cy.contains("add").click()
+
+      cy.get("#title").type('cypress3')
+      cy.get("#author").type('is3')
+      cy.get("#url").type('fun3')
+      cy.contains("add").click()
+
+      cy.get('.blog').eq(0).contains('View').click()
+      cy.wait(100)
+      cy.get('.blog').eq(1).contains('View').click()
+      cy.wait(100)
+      cy.get('.blog').eq(2).contains('View').click()
+      cy.wait(100)
+
+      cy.get('.blog').eq(0).contains('Like').click()
+      cy.wait(200)
+      cy.get('.blog').eq(0).contains('Like').click()
+      cy.wait(200)
+
+      cy.get('.blog').eq(1).contains('Like').click()
+      cy.wait(200)
+      cy.get('.blog').eq(1).contains('Like').click()
+      cy.wait(200)
+      cy.get('.blog').eq(1).contains('Like').click()
+      cy.wait(200)
+
+      cy.get('.blog').eq(2).contains('Like').click()
+      cy.wait(200)
+
+      cy.get('.blog').eq(0).contains('cypress2') // test that the most liked blog is first on the list
+    })
+
     describe('when blog is created', function() {
       beforeEach(function() {
         cy.contains('Create Blog').click()
